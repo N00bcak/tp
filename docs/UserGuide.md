@@ -3,11 +3,11 @@ layout: page
 title: User Guide
 ---
 
-RosterBolt helps volunteer coordinators keep a recurring-event roster up to date without getting buried in repetitive admin work. If you manage around 20-500 volunteers, you can use it to add and update volunteer details quickly, check who is available for a shift, review past service records, and keep a clearer picture of your volunteer pool.
+RosterBolt helps **volunteer coordinators** keep a **recurring-event roster** up to date without getting buried in repetitive admin work. If you manage around **20-500 volunteers**, you can use it to update volunteer details quickly, check **availability**, review **service records**, and keep a clearer picture of your volunteer pool.
 
-RosterBolt is a single-user, offline desktop app. It is built for coordinators who prefer typing commands over clicking through many screens, but it still shows your volunteers in a graphical list so you can review results before acting on them.
+RosterBolt is a **single-user, offline desktop app** for coordinators who prefer typing commands over clicking through many screens. It keeps the speed of a **CLI-first workflow** while still giving you a visible volunteer list, so you can check search results and updated records at a glance.
 
-Use RosterBolt when you need to make roster changes fast: importing a new volunteer list, finding weekend ushers, updating availability after a message, deleting outdated volunteer records, restoring accidental deletions, or exporting a filtered list for follow-up.
+Use RosterBolt when you need to make roster changes fast: **importing** a new volunteer list, finding weekend ushers, updating availability after a message, deleting outdated volunteer records, restoring accidental deletions, or **exporting** a filtered list for follow-up.
 
 * Table of Contents
 {:toc}
@@ -21,15 +21,21 @@ Follow these steps to open RosterBolt and try a few common tasks.
 1. **Install Java 17 or above.**
    If you are using a Mac, use the JDK version recommended in this [Mac Java installation guide](https://se-education.org/guides/tutorials/javaInstallationMac.html).
 
+1. **Check your Java version.**
+   * **Windows:** Press `Win + R`, type `cmd`, and press Enter. In the Command Prompt window, type `java -version` and press Enter.
+   * **Mac:** Open Terminal, type `java -version`, and press Enter.
+
+   You should see a version number that starts with `17` or higher. If the command is not recognised, or the version is below 17, install the correct Java version before continuing.
+
 1. **Download RosterBolt.**
    Download the latest `.jar` file from the [RosterBolt releases page](https://github.com/AY2526S2-CS2103T-T12-1/tp/releases).
 
 1. **Place the file somewhere easy to find.**
    For example, you can create a folder called `RosterBolt` in your Documents folder and put the `.jar` file there. RosterBolt will save its data inside the folder where the `.jar` file is located.
 
-1. **Open the folder in a terminal.**
-   * **Windows:** Open the folder, click the address bar, type `cmd`, and press Enter. This opens Command Prompt already pointed at that folder.
-   * **Mac:** Open Terminal, type `cd ` with a space after it, drag the folder into the Terminal window, and press Enter.
+1. **Open the RosterBolt folder in a terminal.**
+   * **Windows:** Open the folder in File Explorer. Click the long path bar at the top of the window, where the folder path is shown. If you are not sure where to click, press `Alt + D`. Type `cmd` and press Enter. This opens Command Prompt already pointed at that folder.
+   * **Mac:** Open Terminal, type `cd ` with a space after it, drag the RosterBolt folder into the Terminal window, and press Enter.
 
 1. **Launch RosterBolt.**
    Run this command:
@@ -60,10 +66,11 @@ Follow these steps to open RosterBolt and try a few common tasks.
    | `delete 3` | Moves the 3rd volunteer in the current list to the recycle bin. |
    | `bin` | Shows recently deleted volunteers. |
    | `restore 1` | Restores the 1st volunteer shown in the recycle bin. |
+   | `clear` | Moves all active volunteers to the recycle bin. Use `bin` and `restore` before exiting if you want the sample data back. |
    | `exit` | Closes RosterBolt. |
 
 1. **When you are ready, continue with the command sections below.**
-   The sample data is there for practice. Your changes are saved automatically, so use `clear` only if you really want to move all active volunteers to the recycle bin.
+   The sample data is there for practice. `delete` and `clear` are reversible while RosterBolt is still open because deleted volunteers go to the recycle bin. The recycle bin is cleared when you run `exit`.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -135,20 +142,25 @@ Commands that do not use extra information, such as `help`, `exit`, `clear`, `bi
 
 </div>
 
-<div markdown="span" class="alert alert-warning">:exclamation: **Avoid slash-style abbreviations that look like command fields**
+<div markdown="block" class="alert alert-warning">
+
+**:exclamation: Avoid slash-style abbreviations that look like command fields**
 
 RosterBolt uses short labels ending in `/` to understand fields. For example, `p/` means phone and `nt/` means notes. Because of this, some normal writing with slashes can look like a field label by accident.
 
 Safe examples:
+
 * `nt/Call c/o Mary` works because `c/o` is treated like a common short abbreviation.
 * `nt/Can help w/ packing` works because there is a space after `w/`.
 
 Avoid examples like:
+
 * `nt/Ask he/she before assigning`
 * `nt/Available m/w/f mornings`
 * `a/Block A x/unknown`
 
 These may be rejected because parts such as `he/`, `m/`, or `x/` look like command fields. To avoid this, write the phrase out clearly:
+
 * Use `he or she` instead of `he/she`.
 * Use `Mon Wed Fri` instead of `m/w/f`.
 * Avoid invented slash labels such as `x/unknown`; put the text in a notes field instead, such as `nt/Unknown extra detail`.
@@ -175,6 +187,25 @@ RosterBolt removes extra spaces from the start and end of a field before checkin
 
 </div>
 
+<div markdown="block" class="alert alert-info">
+
+**:information_source: Where commands work**<br>
+
+RosterBolt has two main views: the **active volunteer list** and the **recycle bin**. Some commands behave differently depending on which view you are currently using.
+
+| Command(s) | From the active volunteer list | From the recycle bin |
+|------------|--------------------------------|----------------------|
+| `add`, `edit`, `delete`, `clear`, `stats` | Works on active volunteers. | Rejected. These commands do not change deleted volunteers. |
+| `restore` | Rejected. | Restores volunteers from the recycle bin. |
+| `find` | Searches active volunteers. | Searches deleted volunteers in the recycle bin. |
+| `list` | Shows all active volunteers. | Switches back to the active volunteer list. |
+| `bin` | Switches to the recycle bin. | Shows all deleted volunteers in the recycle bin. |
+| `import` | Imports into the active volunteer list. | Imports into the active volunteer list and switches back there. |
+| `export` | Exports the active volunteers currently displayed. | Exports the active volunteer list instead, then switches back there. |
+| `help`, `alias`, `aliases`, `unalias`, `editprev`, `exit` | Works. | Works. |
+
+</div>
+
 ### Getting help
 
 #### Viewing help : `help`
@@ -194,12 +225,22 @@ Example:
 
 Adds a new volunteer to your active roster. Use this when someone signs up, joins a new recurring programme, or needs to be recorded before you assign shifts.
 
-You must be viewing the active volunteer list to use this command. If you are viewing the recycle bin, RosterBolt will reject the command and no volunteer will be added.
-
 Format: `add n/NAME p/PHONE e/EMAIL a/ADDRESS [t/TAG]... [r/ROLE] [nt/NOTES] [va/AVAILABILITY]... [vr/RECORD]...`
 
+| Prefix | Required? | Use it for |
+|--------|-----------|------------|
+| `n/` | Yes | Volunteer's name. |
+| `p/` | Yes | Phone number. |
+| `e/` | Yes | Email address. |
+| `a/` | Yes | Address or location note. |
+| `t/` | No | Tags such as `usher`, `logistics`, or `weekend`. You may use this more than once. |
+| `r/` | No | Main volunteer role. |
+| `nt/` | No | Coordination notes. |
+| `va/` | No | Availability slots. You may use this more than once. |
+| `vr/` | No | Past volunteering records. You may use this more than once. |
+
 <div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-You can add multiple tags, availability slots, and volunteer records. Role and notes are optional.
+If a volunteer can help in several ways, capture that in the same command instead of adding it later. For example, use multiple `t/` prefixes for roles like `usher` and `weekend`, and multiple `va/` prefixes if they are free on more than one day.
 </div>
 
 What to expect:
@@ -242,9 +283,16 @@ Examples:
 
 Updates an existing volunteer. Use this when a volunteer changes contact details, tells you new availability, completes a shift, or needs notes added after follow-up.
 
-You must be viewing the active volunteer list to use this command. The `INDEX` is the number shown beside the volunteer in the current list or filtered search results.
+The `INDEX` is the number shown beside the volunteer in the current list or filtered search results.
 
 Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [r/ROLE] [nt/NOTES] [t/TAG]... [va/AVAILABILITY]... [vr/RECORD]...`
+
+| Part | What it means |
+|------|---------------|
+| `INDEX` | The volunteer number shown in the current active list or filtered results. |
+| `n/`, `p/`, `e/`, `a/` | Replace the volunteer's name, phone, email, or address. |
+| `r/`, `nt/` | Replace the volunteer's role or notes. Use `r/` or `nt/` with nothing after it to clear that field. |
+| `t/`, `va/`, `vr/` | Replace all existing tags, availability slots, or volunteer records. Use an empty prefix such as `t/` to clear the whole set. |
 
 What to expect:
 * You must provide at least one field to update.
@@ -252,6 +300,7 @@ What to expect:
 * For tags, availabilities, and volunteer records, editing the field replaces the whole set. It does not add to the existing set.
 * You can clear all tags, availabilities, records, role, or notes by typing the prefix with nothing after it: `t/`, `va/`, `vr/`, `r/`, or `nt/`.
 * Do not mix empty and non-empty tag values in the same command. For example, `edit 1 t/friend t/` is rejected because it asks RosterBolt to both set and clear tags.
+* See [field value rules](#field-constraints) if a value is rejected.
 
 Examples:
 * `edit 1 p/91234567 e/johndoe@example.com va/MONDAY,18:00,20:00` updates the 1st volunteer's phone, email, and availability.
@@ -261,8 +310,6 @@ Examples:
 #### Deleting volunteer(s) : `delete`
 
 Moves one or more active volunteers to the recycle bin. Use this when volunteers leave the organisation or when you need to remove outdated volunteer records after checking the current list.
-
-You must be viewing the active volunteer list to use this command. Deleted volunteers can be restored before you close RosterBolt.
 
 Format: `delete INDEX [MORE_INDICES]`
 
@@ -282,7 +329,9 @@ Examples:
 
 Moves every active volunteer to the recycle bin at once. Use this only when you want to start over or replace the roster, because it affects the full active list.
 
-You must be viewing the active volunteer list to use this command.
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
+`clear` affects **all active volunteers**, even if you are currently looking at filtered `find` results. You can restore cleared volunteers from the recycle bin only before you close RosterBolt.
+</div>
 
 Format: `clear`
 
@@ -317,8 +366,6 @@ Examples:
 #### Restoring deleted volunteer(s) : `restore`
 
 Restores volunteers from the recycle bin into the active volunteer list. Use this when you deleted someone by mistake or cleared the roster too broadly.
-
-You must be viewing the recycle bin to use this command.
 
 Format: `restore INDEX [MORE_INDICES]`
 
@@ -383,7 +430,7 @@ Examples:
 
 Shows text-based charts for the volunteers currently displayed. Use this to review your roster at a glance, such as checking whether roles are balanced or who has the most service records.
 
-You must be viewing the active volunteer list to use this command. If a `find` filter is active, RosterBolt calculates statistics from the filtered list. Run `list` first if you want statistics for the full active roster.
+If a `find` filter is active, RosterBolt calculates statistics from the filtered active list. Run `list` first if you want statistics for the full active roster.
 
 Format: `stats CATEGORY`
 
@@ -558,6 +605,30 @@ Examples:
 
 **Q**: How do I transfer my data to another computer?<br>
 **A**: Install RosterBolt on the other computer, then copy the data file from your old RosterBolt home folder and use it to replace the empty data file in the new installation.
+
+**Q**: Where is my volunteer data stored?<br>
+**A**: RosterBolt stores your volunteer data at `[JAR file location]/data/rosterbolt.json`.
+
+**Q**: Do I need to save manually?<br>
+**A**: No. RosterBolt saves automatically whenever a command changes your volunteer data. If saving fails, RosterBolt shows a warning.
+
+**Q**: Can I undo `delete` or `clear`?<br>
+**A**: Yes, but only before you close RosterBolt. Deleted volunteers go to the recycle bin, where you can use `restore`. The recycle bin is cleared when you run `exit` or close the app.
+
+**Q**: Why did `restore` fail?<br>
+**A**: RosterBolt blocks a restore if the active volunteer list already has someone with the same phone number or email, or if you try to restore two volunteers with the same phone number or email in one command.
+
+**Q**: Why did `find 6591234567` not match a phone number stored as `+6591234567`?<br>
+**A**: Keyword search treats `+6591234567` as different from `6591234567`. Use substring search instead: `find m/ss 6591234567`.
+
+**Q**: How do I record more than one availability slot for a volunteer?<br>
+**A**: Use `va/` more than once, for example `va/MONDAY,09:00,12:00 va/SATURDAY,14:00,17:00`.
+
+**Q**: Why did `export data/volunteers.csv` create a file with a longer name?<br>
+**A**: RosterBolt does not overwrite an existing export file. If `data/volunteers.csv` already exists, it creates a derived filename such as `data/volunteers-20260413T153045-1a2b3c4d.csv`.
+
+**Q**: Can multiple coordinators edit the same RosterBolt data file at the same time?<br>
+**A**: No. RosterBolt is designed as a single-user offline app. Export the roster if you need to share a copy with someone else.
 
 --------------------------------------------------------------------------------------------------------------------
 
