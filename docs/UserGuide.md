@@ -3,11 +3,11 @@ layout: page
 title: User Guide
 ---
 
-RosterBolt helps **volunteer coordinators** keep a **recurring-event roster** up to date without getting buried in repetitive admin work. If you manage around **20-500 volunteers**, you can use it to update volunteer details quickly, check **availability**, review **service records**, and keep a clearer picture of your volunteer pool.
+RosterBolt is built for **volunteer coordinators** who run **recurring events** and manage around **20-500 volunteers**. It helps you reduce repetitive admin work by making roster updates, availability checks, service record reviews, and CSV data transfers faster to handle.
 
-RosterBolt is a **single-user, offline desktop app** for coordinators who prefer typing commands over clicking through many screens. It keeps the speed of a **CLI-first workflow** while still giving you a visible volunteer list, so you can check search results and updated records at a glance.
+RosterBolt is a **single-user, offline desktop app** for fast typists who prefer entering commands directly. It keeps your volunteer list on screen as you work, so you can review the current roster, filtered search results, and command feedback without switching tools.
 
-Use RosterBolt when you need to make roster changes fast: **importing** a new volunteer list, finding weekend ushers, updating availability after a message, deleting outdated volunteer records, restoring accidental deletions, or **exporting** a filtered list for follow-up.
+Use RosterBolt when you need to make roster changes fast: importing a new volunteer list, finding weekend ushers, updating availability after a message, deleting outdated volunteer records, restoring accidental deletions, or exporting a filtered list for follow-up.
 
 * Table of Contents
 {:toc}
@@ -195,7 +195,7 @@ RosterBolt has two main views: the **active volunteer list** and the **recycle b
 
 | Command(s) | From the active volunteer list | From the recycle bin |
 |------------|--------------------------------|----------------------|
-| `add`, `edit`, `delete`, `clear`, `stats` | Works on active volunteers. | Rejected. These commands do not change deleted volunteers. |
+| `add`, `edit`, `delete`, `clear`, `stats` | Works on active volunteers. | Rejected. These commands do not work with deleted volunteers. |
 | `restore` | Rejected. | Restores volunteers from the recycle bin. |
 | `find` | Searches active volunteers. | Searches deleted volunteers in the recycle bin. |
 | `list` | Shows all active volunteers. | Switches back to the active volunteer list. |
@@ -307,9 +307,14 @@ Examples:
 * `edit 2 n/Betsy Crower t/ va/ vr/` updates the 2nd volunteer's name and clears all tags, availability slots, and volunteer records.
 * `edit 3 nt/Called on 14 Apr; can help with registration if needed` replaces the notes for the 3rd volunteer.
 
+<a id="deleting-volunteers--delete"></a>
 #### Deleting volunteer(s) : `delete`
 
 Moves one or more active volunteers to the recycle bin. Use this when volunteers leave the organisation or when you need to remove outdated volunteer records after checking the current list.
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:**
+`delete` works only from the active volunteer list. Deleted volunteers can be recovered with [`restore`](#restoring-a-deleted-volunteer--restore) before you close RosterBolt.
+</div>
 
 Format: `delete INDEX [MORE_INDICES]`
 
@@ -325,12 +330,13 @@ Examples:
 
 ![result after deleting multiple volunteers](images/bulk-delete.png)
 
+<a id="clearing-all-active-volunteers--clear"></a>
 #### Clearing all active volunteers : `clear`
 
 Moves every active volunteer to the recycle bin at once. Use this only when you want to start over or replace the roster, because it affects the full active list.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
-`clear` affects **all active volunteers**, even if you are currently looking at filtered `find` results. You can restore cleared volunteers from the recycle bin only before you close RosterBolt.
+`clear` affects **all active volunteers**, even if you are currently looking at filtered [`find`](#finding-volunteers-by-keyword-find) results. You can use [`bin`](#viewing-recently-deleted-volunteers--bin) and [`restore`](#restoring-a-deleted-volunteer--restore) to recover cleared volunteers only before you close RosterBolt.
 </div>
 
 Format: `clear`
@@ -341,13 +347,14 @@ What to expect:
 * The recycle bin is cleared when you close RosterBolt, so restore accidental deletions before exiting.
 
 Examples:
-* `list` followed by `clear` moves every active volunteer into the recycle bin and leaves the active list empty.
-* `clear` followed by `bin` lets you review the cleared volunteers.
+* [`list`](#listing-all-volunteers--list) followed by `clear` moves every active volunteer into the recycle bin and leaves the active list empty.
+* `clear` followed by [`bin`](#viewing-recently-deleted-volunteers--bin) lets you review the cleared volunteers.
 * `bin` followed by `clear` is rejected because `clear` works only from the active volunteer list.
 
+<a id="viewing-recently-deleted-volunteers--bin"></a>
 #### Viewing recently deleted volunteers : `bin`
 
-Shows the recycle bin for the current RosterBolt session. Use this after deleting or clearing volunteers to check what was removed.
+Shows the recycle bin for the current RosterBolt session. Use this after [`delete`](#deleting-volunteers--delete) or [`clear`](#clearing-all-active-volunteers--clear) to check what was removed.
 
 Format: `bin`
 
@@ -359,6 +366,7 @@ What to expect:
 Examples:
 * `delete 2` followed by `bin` shows the deleted volunteer.
 * `clear` followed by `bin` shows the volunteers removed by `clear`.
+* Use [`restore`](#restoring-a-deleted-volunteer--restore) before closing RosterBolt if you want to recover a deleted volunteer.
 
 ![Recycle bin view](images/binView.png)
 
@@ -392,6 +400,17 @@ Searches the current view for matching volunteers. Use it to find a specific vol
 If you are viewing the active volunteer list, `find` searches active volunteers. If you are viewing the recycle bin, `find` searches the recycle bin.
 
 Format: `find [m/MATCH_TYPE] [va/DAY,HH:mm,HH:mm] [SEARCH_TERM [MORE_SEARCH_TERMS]]`
+
+| Part | Required? | Use it for |
+|------|-----------|------------|
+| `m/MATCH_TYPE` | No | Choosing how text should match. Use `m/kw` for full words, `m/ss` for substrings, or `m/fz` for fuzzy matches. |
+| `va/DAY,HH:mm,HH:mm` | No | Filtering for volunteers available for a specific time slot. |
+| `SEARCH_TERM` | Required if no `va/` is used | Searching fields such as name, phone, email, address, role, notes, and tags. |
+| `MORE_SEARCH_TERMS` | No | Adding more possible text matches. Multiple search terms use `OR` logic. |
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+Use `m/fz` when you are not sure about spelling, such as names copied from messages or addresses entered inconsistently. Use `m/ss` when you remember only part of a name, phone number, role, or tag.
+</div>
 
 Search terms:
 * RosterBolt searches name, phone, email, address, role, notes, and tags.
@@ -430,7 +449,7 @@ Examples:
 
 Shows text-based charts for the volunteers currently displayed. Use this to review your roster at a glance, such as checking whether roles are balanced or who has the most service records.
 
-If a `find` filter is active, RosterBolt calculates statistics from the filtered active list. Run `list` first if you want statistics for the full active roster.
+If a [`find`](#finding-volunteers-by-keyword-find) filter is active, RosterBolt calculates statistics from the filtered active list. Run [`list`](#listing-all-volunteers--list) first if you want statistics for the full active roster.
 
 Format: `stats CATEGORY`
 
@@ -460,8 +479,8 @@ Rules:
 * Aliases are saved in `preferences.json`, not in your volunteer data file.
 
 Examples:
-* `alias f find` followed by `f va/MONDAY,14:00,17:00 alice` behaves like `find va/MONDAY,14:00,17:00 alice`.
-* `alias ls list` lets you type `ls name` instead of `list name`.
+* `alias f find` followed by `f va/MONDAY,14:00,17:00 alice` behaves like [`find`](#finding-volunteers-by-keyword-find) `va/MONDAY,14:00,17:00 alice`.
+* `alias ls list` lets you type `ls name` instead of [`list`](#listing-all-volunteers--list) `name`.
 * `alias ep editprev` is rejected because `editprev` cannot be an alias target.
 * `alias quickadd add n/John Doe` is rejected because the target must be one command word only.
 
@@ -498,12 +517,13 @@ What to expect:
 * The recalled command is not run automatically. Edit it first, then press Enter.
 
 Examples:
-* `find Betsy` followed by `editprev` loads `find Betsy` back into the command box.
+* [`find`](#finding-volunteers-by-keyword-find) `Betsy` followed by `editprev` loads `find Betsy` back into the command box.
 * `alias f find` followed by `f Betsy` and then `editprev` loads `f Betsy`, not `find Betsy`.
 * Running `editprev` before any successful command is rejected with `There is no previous command to edit.`
 
 ### Data import/export and storage
 
+<a id="importing-volunteers-from-a-csv-file--import"></a>
 #### Importing volunteers from a CSV file : `import`
 
 Imports volunteers from a CSV file. Use this when onboarding a batch of volunteers or moving data from a spreadsheet into RosterBolt.
@@ -520,7 +540,7 @@ CSV requirements:
 * Standard CSV quoting is supported. If a cell contains commas, put the whole cell in double quotes.
 * Multiple tags, availabilities, or records in one cell are separated with semicolons (`;`).
 * Blank optional cells are allowed.
-* CSV files exported by RosterBolt already use the correct format and can be imported back directly.
+* CSV files exported by [`export`](#exporting-volunteers-to-a-csv-file--export) already use the correct format and can be imported back directly.
 
 What to expect:
 * If the file cannot be read, import fails.
@@ -550,6 +570,7 @@ Bob Lim,92345678,bob@example.com,NUS,Usher,Prefers mornings,weekend,MONDAY,09:00
 
 The incorrect row is likely to be read as too many CSV columns because the structured fields contain unquoted commas.
 
+<a id="exporting-volunteers-to-a-csv-file--export"></a>
 #### Exporting volunteers to a CSV file : `export`
 
 Exports active volunteer data to a CSV file. Use this to make a backup, share a shortlist, or continue working with the data in Excel or Google Sheets.
@@ -557,10 +578,14 @@ Exports active volunteer data to a CSV file. Use this to make a backup, share a 
 Format: `export FILE_PATH`
 
 What gets exported:
-* If you are viewing the active volunteer list, RosterBolt exports the volunteers currently displayed. This means active `find` filters are respected.
+* If you are viewing the active volunteer list, RosterBolt exports the volunteers currently displayed. This means active [`find`](#finding-volunteers-by-keyword-find) filters are respected.
 * If you are viewing the full unfiltered list, RosterBolt exports all active volunteers.
 * Deleted volunteers are never exported.
 * If you run `export` while viewing the recycle bin, RosterBolt exports the active volunteer list instead and switches back to it.
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:**
+If the requested file already exists, RosterBolt creates a new filename instead of overwriting it. This is why you may see an exported file with a timestamp and short random code in its name.
+</div>
 
 File rules:
 * Exactly one file path must be provided.
@@ -570,14 +595,14 @@ File rules:
 
 Examples:
 * `export backups/event-a.csv` exports the currently displayed active volunteers into the `backups` folder.
-* `find va/SATURDAY,09:00,12:00 usher` followed by `export exports/saturday-ushers.csv` exports only the filtered shortlist.
+* [`find`](#finding-volunteers-by-keyword-find) `va/SATURDAY,09:00,12:00 usher` followed by `export exports/saturday-ushers.csv` exports only the filtered shortlist.
 * `export data/volunteers.csv` creates `data/volunteers.csv` if it does not exist. If it already exists, RosterBolt creates a derived filename instead of overwriting it.
 
 #### Saving the data
 
 RosterBolt saves your volunteer data automatically whenever you make a change. You do not need to save manually.
 
-If a command runs successfully but RosterBolt cannot save to disk, for example because of a file permissions issue, you will see the command's success message together with a warning that the changes were not saved and will be lost if you close the app.
+If a command runs successfully but RosterBolt cannot save to disk, for example because of a file permissions issue, you will see the command's success message together with a warning that the changes were not saved and will be lost if you close the app. You can also use [`export`](#exporting-volunteers-to-a-csv-file--export) to create a CSV backup.
 
 #### Editing the data file
 
@@ -597,7 +622,7 @@ Format: `exit`
 
 Examples:
 * `exit` closes RosterBolt after saving active volunteer data.
-* If you have accidentally deleted a volunteer, restore them before running `exit`.
+* If you have accidentally deleted a volunteer, [`restore`](#restoring-a-deleted-volunteer--restore) them before running `exit`.
 
 --------------------------------------------------------------------------------------------------------------------
 
